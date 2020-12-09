@@ -1,0 +1,32 @@
+#!/bin/bash
+#
+# Basically a rebase-and-amend tool
+# Made by Sebastiano Barezzi (barezzisebastiano@gmail.com)
+#
+# Note: This requires Gerrit commit hook either in repo git folder or git global folder
+#
+
+set -e
+
+if [ "$1" = "" ]; then
+    echo "No commit hash provided"
+    exit
+fi
+
+read -p "Are you sure you want to rebase and add a Change-Id to every commit from $1 to HEAD? [y/N]" confirm
+
+if [ "$confirm" != "y" ] && [ "$confirm" != "y" ]; then
+    exit
+fi
+
+current_head="$(git rev-parse --short HEAD)"
+
+git reset --hard "$1"
+
+for commit in $(git log "$1".."$current_head" --pretty=format:"%h" --reverse); do
+    echo "Cherry-picking and applying Change-Id to $commit"
+    git cherry-pick "$commit" --no-edit &> /dev/null
+    git commit --amend --no-edit &> /dev/null
+done
+
+echo "All done"
