@@ -10,7 +10,6 @@
 
 GIT_USER_NAME="Sebastiano Barezzi"
 GIT_USER_EMAIL="barezzisebastiano@gmail.com"
-AOSP_MAIN_DIR="/mnt/Android"
 
 packageinstall() {
 	echo "Installing package(s): $1"
@@ -25,30 +24,20 @@ packageinstall() {
 }
 
 # Copy every file from the repo to the current home folder
-cp -R * ~/
+for file in .bashrc-overlay .xprofile; do
+	cp ${file} ~/${file}
+done
+cp -R bin/* ~/bin/
 
-# Add ~/bin to PATH, so scripts inside it can be executed
-echo 'export PATH="~/bin:$PATH"' >> ~/.bashrc
-
-# Enable ccache on AOSP building
-echo "export USE_CCACHE=1
-export CCACHE_EXEC=/usr/bin/ccache
-export CCACHE_DIR=${AOSP_MAIN_DIR}/ccache" >> ~/.bashrc
-
-# Source build/envsetup.sh if found
-echo '
-if [ -f "build/envsetup.sh" ]; then
-	echo "AOSP build/envsetup.sh found, sourcing..."
-	source build/envsetup.sh
-	echo "Done"
-fi' >> ~/.bashrc
+# Source .bashrc additions
+echo 'source ~/.bashrc-overlay' >> ~/.bashrc
 
 # Install git
 packageinstall git
 
 # Set git infos
-git config --global user.name "Sebastiano Barezzi"
-git config --global user.email "barezzisebastiano@gmail.com"
+git config --global user.name "${GIT_USER_NAME}"
+git config --global user.email "${GIT_USER_EMAIL}"
 
 # Add the Gerrit Change-id hook
 mkdir -p ~/.git/hooks

@@ -1,0 +1,24 @@
+#!/bin/bash
+#
+# Copyright (C) 2020 The Android Open Source Project
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+# Variables
+AOSP_MAIN_DIR="/mnt/Android"
+
+# Add ~/bin to PATH, so scripts inside it can be executed
+export PATH="~/bin:$PATH"
+
+# Enable ccache on AOSP building
+export USE_CCACHE=1
+export CCACHE_EXEC=/usr/bin/ccache
+export CCACHE_DIR=${AOSP_MAIN_DIR}/ccache
+
+# Source build/envsetup.sh if found
+if [ -f "build/envsetup.sh" ]; then
+	echo "AOSP build/envsetup.sh found, sourcing..."
+	source build/envsetup.sh
+	echo "Done"
+fi
