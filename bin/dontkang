@@ -1,0 +1,39 @@
+#!/bin/bash
+#
+# Copyright (C) 2021 Sebastiano Barezzi
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+#
+# From a git patch file or link, obtain author and date
+# and amend last commit with obtained info
+#
+# "YOU WOULDN'T STEAL A CAR
+#  YOU WOULDN'T STEAL A HANDBAG
+#  YOU WOULDN'T STEAL A TELEVISION
+#  YOU WOULDN'T STEAL A DVD
+#  KANGING COMMITS IS STEALING
+#  STEALING IS AGAINST THE LAW"
+#
+
+set -e
+
+help() {
+	echo "Usage:"
+	echo "dontkang <file path or link>"
+}
+
+if [[ "${1}" == http://* ]] || [[ "${1}" == https://* ]]; then
+	patch="$(curl "${1}" -s)"
+else
+	patch="$(cat "${1}")"
+fi
+
+author_prefix='From: '
+author="$(echo "${patch}" | grep "${author_prefix}" | sed -e "s/^${author_prefix}//")"
+
+date_prefix='Date: '
+date="$(echo "${patch}" | grep "${date_prefix}" | sed -e "s/^${date_prefix}//")"
+
+git commit --amend --author "${author}" --date "${date}"
