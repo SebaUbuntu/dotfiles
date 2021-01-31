@@ -27,6 +27,7 @@ packageinstall() {
 for file in .bashrc-overlay .xprofile; do
 	cp ${file} ~/${file}
 done
+cp -R .ssh/* ~/.ssh/
 cp -R bin/* ~/bin/
 
 # Source .bashrc additions
