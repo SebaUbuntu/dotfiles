@@ -1,0 +1,13 @@
+#!/bin/bash
+# By jebaitedneko
+
+NEW_DTS="${NEW_DTS}"
+
+cp "${1}" "${NEW_DTS}"
+sed -i 's/linux\,phandle \= [<]0x[0-9 A-Z a-z]*[>][;]//g' "${NEW_DTS}"
+sed -i 's/phandle \= [<]0x[0-9 A-Z a-z]*[>][;]//g' "${NEW_DTS}"
+sed -i 's/0x00/0x0/g' "${NEW_DTS}"
+sed -i 's/okay/ok/g' "${NEW_DTS}"
+sed -i 's/[ \t]*$//' "${NEW_DTS}"
+awk 'BEGIN{RS="";ORS="\n\n"}1' "${NEW_DTS}" > "${NEW_DTS::-4}_diff_final.dts" && rm "${NEW_DTS}" && mv "${NEW_DTS::-4}_diff_final.dts" "${NEW_DTS}"
+sed -i 's/[ \t]*$//' "${NEW_DTS}"

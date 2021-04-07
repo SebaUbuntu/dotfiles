@@ -1,0 +1,34 @@
+#!/bin/bash
+#
+# Merge FETCH_HEAD as a subtree in a specific folder
+#
+# Author: Sebastiano Barezzi (barezzisebastiano@gmail.com)
+# Version: 1.0
+#
+
+# 1: Git link
+# 2: Branch or tag
+# 3: Directory
+
+set -e
+
+help() {
+	echo "Usage:"
+	echo "merge-subtree git_link tag subtree_dir"
+}
+
+if [ "${1}" == "" ] || [ "${2}" == "" ] || [ "${3}" == "" ]; then
+	help
+	exit
+fi
+
+read -p "Are you sure you want to merge ${1} (tag ${2}) to the current repo in ${3}? [y/N]: " rc
+
+if [ "${rc}" != "y" ] && [ "${rc}" != "Y" ]; then
+	exit
+fi
+
+git fetch "${1}" "${2}"
+git merge -s ours --no-commit --allow-unrelated-histories FETCH_HEAD
+git read-tree --prefix="${3}" -u FETCH_HEAD
+git commit
