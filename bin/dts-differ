@@ -1,9 +1,10 @@
 #!/bin/bash
 # By jebaitedneko
 
-NEW_DTS="${NEW_DTS}"
+DTS="${1}"
+NEW_DTS="${DTS::-4}_new.dts"
 
-cp "${1}" "${NEW_DTS}"
+cp "${DTS}" "${NEW_DTS}"
 sed -i 's/linux\,phandle \= [<]0x[0-9 A-Z a-z]*[>][;]//g' "${NEW_DTS}"
 sed -i 's/phandle \= [<]0x[0-9 A-Z a-z]*[>][;]//g' "${NEW_DTS}"
 sed -i 's/0x00/0x0/g' "${NEW_DTS}"
