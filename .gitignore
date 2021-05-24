@@ -1,0 +1,14 @@
+# Ignore everything
+*
+
+# Allow gitignore ;-;
+!/.gitignore
+
+# Scripts
+!/bin
+
+# bashrc overlays
+!/.bashrc-overlay
+
+# xprofile
+!/.xprofile
