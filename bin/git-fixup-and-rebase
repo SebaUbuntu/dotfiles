@@ -1,0 +1,6 @@
+#!/bin/bash
+
+set -e
+
+git commit --fixup "${1}"
+EDITOR=true git rebase --interactive --autosquash "${1}"^1

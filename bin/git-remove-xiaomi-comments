@@ -1,0 +1,30 @@
+#!/bin/bash
+#
+# Author: Sebastiano Barezzi <barezzisebastiano@gmail.com>
+# Version: 1.0
+#
+# Delete Xiaomi copyright headers from kernel sources
+#
+
+bashregex='Copyright \([cC]\) [0-9]+ XiaoMi, Inc.'
+
+echo "Discarding Xiaomi copyright from unstaged changes..."
+
+nchangedfiles=0
+
+for file in $(git diff --name-only); do
+	if [ ! -f "${file}" ]; then
+		# File doesn't exists
+		continue
+	fi
+	diff="$(git diff --unified=0 ${file})"
+	if [[ "${diff}" =~ ${bashregex} ]]; then
+		# Matches Xiaomi copyright regex, we can safely discard changes
+		# Note: [0-9]+ doesn't work
+		sed -i '/Copyright ([cC]) [0-9][0-9][0-9][0-9] XiaoMi, Inc./d' "${file}"
+		echo "Deleted Xiaomi copyright from ${file}"
+		nchangedfiles=$(( nchangedfiles + 1 ))
+	fi
+done
+
+echo "Done, removed Xiaomi copyright from ${nchangedfiles} unstaged files"
