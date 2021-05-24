@@ -5,7 +5,7 @@
 !/.gitignore
 
 # Scripts
-!/bin
+!/bin/*
 
 # bashrc overlays
 !/.bashrc-overlay
