@@ -25,10 +25,12 @@ packageinstall() {
 
 # Copy every file from the repo to the current home folder
 for file in .bashrc-overlay .xprofile; do
-	cp ${file} ~/${file}
+	cp "${file}" ~/
 done
-cp -R .ssh/* ~/.ssh/
-cp -R bin/* ~/bin/
+
+for dir in .ssh bin; do
+	cp -R "${dir}" ~/
+done
 
 # Source .bashrc additions
 echo 'source ~/.bashrc-overlay' >> ~/.bashrc
