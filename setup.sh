@@ -33,7 +33,10 @@ for dir in .ssh bin; do
 done
 
 # Source .bashrc additions
-echo 'source ~/.bashrc-overlay' >> ~/.bashrc
+BASHRC_OVERLAY_STRING='source ~/.bashrc-overlay'
+if [ "$(cat ~/.bashrc | grep "${BASHRC_OVERLAY_STRING}")" = "" ]; then
+	echo 'source ~/.bashrc-overlay' >> ~/.bashrc
+fi
 
 # Install git
 packageinstall git
