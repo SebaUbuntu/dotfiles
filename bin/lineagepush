@@ -1,0 +1,13 @@
+#!/bin/bash
+
+USER="SebaUbuntu"
+SERVER="review.lineageos.org"
+PORT="29418"
+PREFIX="LineageOS"
+
+REPO="${1}"
+BRANCH="${2}"
+
+shift 2
+
+git push "ssh://${USER}@${SERVER}:${PORT}/${PREFIX}/${REPO}" ${BRANCH} "$@"

@@ -14,7 +14,7 @@ export PATH="~/bin:$PATH"
 # Enable ccache on AOSP building
 export USE_CCACHE=1
 export CCACHE_EXEC=/usr/bin/ccache
-export CCACHE_DIR=${AOSP_MAIN_DIR}/ccache
+export CCACHE_DIR=/mnt/ccache
 
 # Source build/envsetup.sh if found
 if [ -f "build/envsetup.sh" ]; then

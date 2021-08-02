@@ -1,0 +1,28 @@
+#!/bin/bash
+
+if [ "${1}" == "" ]; then
+	echo "Provide DTB/DTBO target name"
+	exit
+fi
+
+if [ -f "arch/arm64/boot/dts/qcom/.${1}.dtbo.d.pre.tmp" ]; then
+	echo "# DTBO Target detected"
+	file="arch/arm64/boot/dts/qcom/.${1}.dtbo.d.pre.tmp"
+elif [ -f "arch/arm64/boot/dts/qcom/.${1}.dtb.d.pre.tmp" ]; then
+	echo "# DTB target detected"
+	file="arch/arm64/boot/dts/qcom/.${1}.dtb.d.pre.tmp"
+fi
+
+DTS_LIST="$(cat "${file}" |
+			cut -f2 -d ':' |
+			sed "s| ..\/||g" |
+			sed "s| \/||g" |
+			cut -f1 -d '\' |
+			sed 's|.*/||' |
+			grep '.dts' |
+			sort -u |
+			column -t)"
+
+for dts in "${DTS_LIST}"; do
+	echo "${dts}"
+done

@@ -28,7 +28,7 @@ for file in .bashrc-overlay .xprofile; do
 	cp "${file}" ~/
 done
 
-for dir in .ssh bin; do
+for dir in .fonts .ssh bin; do
 	cp -R "${dir}" ~/
 done
 

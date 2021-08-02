@@ -12,3 +12,6 @@
 
 # xprofile
 !/.xprofile
+
+# Fonts
+!/.fonts/*
