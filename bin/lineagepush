@@ -5,9 +5,39 @@ SERVER="review.lineageos.org"
 PORT="29418"
 PREFIX="LineageOS"
 
-REPO="${1}"
-BRANCH="${2}"
+REMOTE_PREFIX="https://github.com/LineageOS/"
 
-shift 2
+ADDITIONAL_ARGS=()
 
-git push "ssh://${USER}@${SERVER}:${PORT}/${PREFIX}/${REPO}" ${BRANCH} "$@"
+while [ "${#}" -gt 0 ]; do
+    case "${1}" in
+        -b | --branch)
+            BRANCH="${2}"
+            shift
+            ;;
+        -r | --repo)
+            REPO="${2}"
+            shift
+            ;;
+        *)
+            ADDITIONAL_ARGS+=("${1}")
+            ;;
+    esac
+    shift
+done
+
+if [ "${BRANCH}" = "" ]; then
+    echo "Branch is empty"
+    exit
+fi
+
+if [ "${REPO}" = "" ]; then
+    for remote in $(git remote -v | awk '{print $2}'); do
+        if [[ "${remote}" == ${REMOTE_PREFIX}* ]]; then
+            REPO=${remote#"$REMOTE_PREFIX"}
+            break
+        fi
+    done
+fi
+
+git push "ssh://${USER}@${SERVER}:${PORT}/${PREFIX}/${REPO}" "${BRANCH}" ${ADDITIONAL_ARGS[@]}
