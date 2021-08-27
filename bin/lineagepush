@@ -5,7 +5,8 @@ SERVER="review.lineageos.org"
 PORT="29418"
 PREFIX="LineageOS"
 
-REMOTE_PREFIX="https://github.com/LineageOS/"
+REMOTE_PREFIX_HTTPS="https://github.com/LineageOS/"
+REMOTE_PREFIX_SSH="git://github.com/LineageOS/"
 
 ADDITIONAL_ARGS=()
 
@@ -33,8 +34,11 @@ fi
 
 if [ "${REPO}" = "" ]; then
     for remote in $(git remote -v | awk '{print $2}'); do
-        if [[ "${remote}" == ${REMOTE_PREFIX}* ]]; then
-            REPO=${remote#"$REMOTE_PREFIX"}
+        if [[ "${remote}" == ${REMOTE_PREFIX_HTTPS}* ]]; then
+            REPO=${remote#"$REMOTE_PREFIX_HTTPS"}
+            break
+        elif [[ "${remote}" == ${REMOTE_PREFIX_SSH}* ]]; then
+            REPO=${remote#"$REMOTE_PREFIX_SSH"}
             break
         fi
     done
