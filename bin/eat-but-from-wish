@@ -5,32 +5,10 @@
 # SPDX-License-Identifier: Apache-2.0
 #
 
-if [ "${TARGET_DEVICE}" != "" ]; then
-    DEVICE="${TARGET_DEVICE}"
-else
-    read -p "TARGET_DEVICE not set, insert device codename: " DEVICE
+if [ "${1}" = "" ]; then
+	echo "File to flash not specified"
+	exit
 fi
-
-if [ "${DEVICE}" = "" ]; then
-    echo "Empty device codename"
-    exit
-fi
-
-ZIP_PATH="out/target/product/${DEVICE}"
-
-ZIPS=()
-for zip in $(ls "${ZIP_PATH}"/*.zip); do
-    ZIPS+=( "${zip}" )
-done
-
-echo "Select what zip you want to flash:"
-for i in ${!ZIPS[@]}; do
-    echo "${i}) ${ZIPS[i]}"
-done
-echo ""
-read -p "Zip number: " ZIP_INDEX
-
-ZIP="${ZIPS[ZIP_INDEX]}"
 
 echo "Waiting for device..."
 adb wait-for-device
@@ -39,5 +17,5 @@ echo "Device found, rebooting to sideload"
 adb reboot sideload-auto-reboot
 
 adb wait-for-device-sideload
-adb sideload "${ZIP}"
+adb sideload "${1}"
 echo "Done"
