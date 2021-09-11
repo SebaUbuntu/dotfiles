@@ -1,0 +1,88 @@
+#!/bin/bash
+#
+# Extract a Linux firmware from a kernel
+# Author: Sebastiano Barezzi <barezzisebastiano@gmail.com>
+# Credits to https://master--okitavera.netlify.app/article/easy-kernel-firmware-extraction-with-csplitb/
+#
+
+set -e
+
+# $1: program name
+program_exists() {
+    which "${1}" &> /dev/null
+}
+
+while [ "${#}" -gt 0 ]; do
+    case "${1}" in
+        -f | --fw)
+            OLD_FW="${2}"
+            shift
+            ;;
+        -k | --kernel)
+            KERNEL="${2}"
+            shift
+            ;;
+        -o | --output)
+            OUTPUT="${2}"
+            shift
+            ;;
+    esac
+    shift
+done
+
+if [ "${OLD_FW}" == "" ] || [ "${KERNEL}" == "" ] || [ "${OUTPUT}" == "" ]; then
+    echo "Usage:"
+    echo "extract-fw-ihex"
+    echo "  [-f | --fw] <old fw (binary or IHEX)>"
+    echo "  [-k | --kernel] <uncompressed kernel image>"
+    echo "  [-o | --output] <output filename>"
+    exit
+fi
+
+# Check if the needed tools are installed
+if ! program_exists avr-objcopy; then
+    echo "avr-objcopy not found, please install avr-gcc package"
+    exit
+fi
+if ! program_exists csplitb; then
+    echo "csplitb not found, please install csplitb pip package"
+    exit
+fi
+if ! program_exists xxd; then
+    echo "xxd not found, please install vim package"
+    exit
+fi
+
+# Convert IHEX to binary if needed
+if [[ "${OLD_FW}" == *.ihex ]]; then
+    IHEX=true
+    SOURCE="${OUTPUT}.temp"
+    avr-objcopy -I ihex -O binary "${OLD_FW}" "${SOURCE}"
+else
+    SOURCE="${OLD_FW}"
+fi
+
+# Get info from original firmware
+MAGIC_NUM="$(xxd -l 4 "${SOURCE}" | awk '{print $2" "$3}')"
+FW_SIZE="$(stat -c %s "${SOURCE}")"
+
+# Check if the firmware is in the kernel
+if ! xxd "${KERNEL}" | grep -q "${MAGIC_NUM}"; then
+    echo "Magic number not found in kernel, make sure the kernel is uncompressed"
+    exit
+fi
+
+# Extract the firmware from the kernel through offset
+csplitb --prefix dumped-fw- --suffix .bin --number 4 "$(echo "${MAGIC_NUM}" | sed 's/ //g')" "${KERNEL}"
+dd if=dumped-fw-0000.bin of="${OUTPUT}" bs="${FW_SIZE}" count=1
+
+# Convert the extracted firmware to IHEX
+avr-objcopy -I binary -O ihex "${OUTPUT}" "${OUTPUT}.ihex"
+
+# Cleanup
+rm "dumped-fw-0000.bin"
+if [ "${IHEX}" = "true" ]; then
+    rm "${SOURCE}"
+fi
+
+echo "Done! Binary: ${OUTPUT}, IHEX: ${OUTPUT}.ihex"
