@@ -22,3 +22,5 @@ if [ -f "build/envsetup.sh" ]; then
 	source build/envsetup.sh
 	echo "Done"
 fi
+
+alias pip3.9="python3.9 -m pip"
