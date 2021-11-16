@@ -15,3 +15,6 @@
 
 # Fonts
 !/.fonts/*
+
+# ...but ignore UUID
+/.fonts/.uuid
