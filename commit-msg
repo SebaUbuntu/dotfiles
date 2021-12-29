@@ -49,6 +49,16 @@ if test ! -s "${dest}" ; then
   exit 1
 fi
 
+# ADD: Append newline
+file_ends_with_newline() {
+  [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
+}
+
+if ! file_ends_with_newline $1; then
+  echo "" >> $1
+fi
+# END ADD
+
 reviewurl="$(git config --get gerrit.reviewUrl)"
 if test -n "${reviewurl}" ; then
   if ! git interpret-trailers --parse < "$1" | grep -q '^Link:.*/id/I[0-9a-f]\{40\}$' ; then
