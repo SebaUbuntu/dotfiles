@@ -35,7 +35,7 @@ done
 # Source .bashrc additions
 BASHRC_OVERLAY_STRING='source ~/.bashrc-overlay'
 if [ "$(cat ~/.bashrc | grep "${BASHRC_OVERLAY_STRING}")" = "" ]; then
-	echo 'source ~/.bashrc-overlay' >> ~/.bashrc
+	echo "${BASHRC_OVERLAY_STRING}" >> ~/.bashrc
 fi
 
 # Install git
