@@ -50,11 +50,7 @@ if test ! -s "${dest}" ; then
 fi
 
 # ADD: Append newline
-file_ends_with_newline() {
-  [[ $(tail -c1 "$1" | wc -l) -gt 0 ]]
-}
-
-if ! file_ends_with_newline $1; then
+if test ! $(tail -c1 "$1" | wc -l) -gt 0 ; then
   echo "" >> $1
 fi
 # END ADD
