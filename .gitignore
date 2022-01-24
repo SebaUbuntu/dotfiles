@@ -18,6 +18,3 @@
 
 # ...but ignore UUID
 /.fonts/.uuid
-
-# commit-msg hook
-!/commit-msg
