@@ -1,0 +1,23 @@
+#!/bin/bash
+
+set -e
+
+if [ -z "$1" ]; then
+    echo "Usage: $0 <path-to-modules-folder>"
+    exit 1
+fi
+
+if [ ! -d "${1}" ]; then
+    echo "Folder ${1} does not exist"
+    exit 1
+fi
+
+if [ "$(ls -A ${1})" ]; then
+    echo "Folder ${1} is not empty"
+    exit 1
+fi
+
+for ko in $(find . -type f -name '*.ko'); do
+    cp "${ko}" "${1}/"
+    echo "kernel/${ko#"./"}" >> "${1}/modules.load"
+done
