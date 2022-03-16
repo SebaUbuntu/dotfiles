@@ -6,7 +6,8 @@ PORT="29418"
 PREFIX="LineageOS"
 
 REMOTE_PREFIX_HTTPS="https://github.com/LineageOS/"
-REMOTE_PREFIX_SSH="git://github.com/LineageOS/"
+REMOTE_PREFIX_GIT="git://github.com/LineageOS/"
+REMOTE_PREFIX_SSH="ssh://git@github.com/LineageOS/"
 
 ADDITIONAL_ARGS=()
 
@@ -36,6 +37,9 @@ if [ "${REPO}" = "" ]; then
     for remote in $(git remote -v | awk '{print $2}'); do
         if [[ "${remote}" == ${REMOTE_PREFIX_HTTPS}* ]]; then
             REPO=${remote#"$REMOTE_PREFIX_HTTPS"}
+            break
+        elif [[ "${remote}" == ${REMOTE_PREFIX_GIT}* ]]; then
+            REPO=${remote#"$REMOTE_PREFIX_GIT"}
             break
         elif [[ "${remote}" == ${REMOTE_PREFIX_SSH}* ]]; then
             REPO=${remote#"$REMOTE_PREFIX_SSH"}
