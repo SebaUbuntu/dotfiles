@@ -1,0 +1,11 @@
+#!/bin/bash
+
+INITRAMFS="${1}"
+OUTDIR="${2}"
+
+if [ -z "${INITRAMFS}" ] || [ -z "${OUTDIR}" ]; then
+    echo "Usage: ${0} <initramfs> <outdir>"
+    exit 1
+fi
+
+gzip -d -c "${INITRAMFS}" --suffix=gz | cpio -i -D "${OUTDIR}"

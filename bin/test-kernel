@@ -1,0 +1,12 @@
+#!/bin/bash
+
+KERNEL="${1}"
+shift
+
+qemu-system-x86_64 \
+    -kernel "${KERNEL}" \
+    -append "console=ttyS0" \
+    -m 512 \
+    -initrd ramdisk.img \
+    --enable-kvm \
+    "${@}"
