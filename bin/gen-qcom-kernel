@@ -1,0 +1,121 @@
+#!/usr/bin/env python3
+
+from argparse import ArgumentParser
+from git import Repo
+from pathlib import Path
+from sebaubuntu_libs.liblogging import LOGI, setup_logging
+from typing import Dict, List
+
+GIT_SERVER = "https://git.codelinaro.org/clo/la"
+PLATFORM_REPOS_PREFIX = f"{GIT_SERVER}/platform"
+
+class _Techpack:
+	_ALL: Dict[str, '_Techpack'] = {}
+
+	def __init__(self, name: str, url: str):
+		self.name = name
+		self.url = url
+
+		_Techpack._ALL[name] = self
+
+	@classmethod
+	def from_name(cls, name: str) -> '_Techpack':
+		return cls._ALL[name]
+
+	def get_folder(self) -> str:
+		return f"techpack/{self.name}"
+
+class _ExtraRepo:
+	_ALL: Dict[str, '_ExtraRepo'] = {}
+
+	def __init__(self, name: str, url: str, folder: str):
+		self.name = name
+		self.url = url
+		self.folder = folder
+
+		_ExtraRepo._ALL[name] = self
+
+	@classmethod
+	def from_name(cls, name: str) -> '_ExtraRepo':
+		return cls._ALL[name]
+
+class _QcomPlatform:
+	_ALL: Dict[str, '_QcomPlatform'] = {}
+
+	def __init__(self,
+	             name: str,
+	             kernel_version: str,
+	             techpacks: List[_Techpack],
+	             extra_repos: List[_ExtraRepo] = None):
+		self.name = name
+		self.kernel_version = kernel_version
+		self.techpacks = techpacks
+		self.extra_repos = extra_repos or []
+
+		_QcomPlatform._ALL[name] = self
+
+	@classmethod
+	def from_name(cls, name: str) -> '_QcomPlatform':
+		return cls._ALL[name]
+
+	def get_kernel_url(self) -> str:
+		return f"{GIT_SERVER}/kernel/msm-{self.kernel_version}"
+
+class Techpack(_Techpack):
+	AUDIO = _Techpack("audio", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/audio-kernel")
+	CAMERA = _Techpack("camera", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/camera-kernel")
+	DATA = _Techpack("data", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/data-kernel")
+	DATAIPA = _Techpack("dataipa", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/dataipa")
+	DATARMNET = _Techpack("datarmnet", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet")
+	DATARMNET_EXT = _Techpack("datarmnet-ext", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet-ext")
+	DISPLAY = _Techpack("display", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/display-drivers")
+	VIDEO = _Techpack("video", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/video-driver")
+
+class ExtraRepo(_ExtraRepo):
+	FW_API = _ExtraRepo("fw-api", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/fw-api", "drivers/staging/fw-api")
+	QCA_WIFI_HOST_CMN = _ExtraRepo("qca-wifi-host-cmn", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qca-wifi-host-cmn", "drivers/staging/qca-wifi-host-cmn")
+	QCACLD_3_0 = _ExtraRepo("qcacld-3.0", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qcacld-3.0", "drivers/staging/qcacld-3.0")
+
+QCACLD_3_0_REPOS = [ExtraRepo.FW_API, ExtraRepo.QCA_WIFI_HOST_CMN, ExtraRepo.QCACLD_3_0]
+
+class QcomPlatform(_QcomPlatform):
+	SDM845 = _QcomPlatform("sdm845", "4.9", [Techpack.AUDIO], [*QCACLD_3_0_REPOS])
+	SM8150 = _QcomPlatform("sm8150", "4.14", [Techpack.AUDIO, Techpack.DATA], [*QCACLD_3_0_REPOS])
+	SM8250 = _QcomPlatform("sm8250", "4.19", [Techpack.AUDIO, Techpack.CAMERA, Techpack.DATA, Techpack.DISPLAY, Techpack.VIDEO], [*QCACLD_3_0_REPOS])
+	SM8350 = _QcomPlatform("sm8350", "5.4", [Techpack.AUDIO, Techpack.CAMERA, Techpack.DATAIPA, Techpack.DATARMNET, Techpack.DATARMNET_EXT, Techpack.DISPLAY, Techpack.VIDEO], [*QCACLD_3_0_REPOS])
+
+def fetch_and_subtree(repo: Repo, url: str, tag: str, folder: str):
+	repo.git.fetch(url, tag)
+	repo.git.merge("--no-commit", "--allow-unrelated-histories", "FETCH_HEAD", strategy="ours")
+	repo.git.read_tree(prefix=folder, u="FETCH_HEAD")
+	repo.git.commit("--no-edit")
+
+def main():
+	setup_logging()
+
+	parser = ArgumentParser()
+	parser.add_argument("platform", help="Platform name (e.g. sm8250)")
+	parser.add_argument("tag", help="CLO release tag (e.g. LA.UM.9.12.r1-14300.01-SMxx50.QSSI13.0)")
+	parser.add_argument("output", help="Folder output (must not exist)", type=Path)
+	args = parser.parse_args()
+
+	assert not args.output.exists(), f"Output folder {args.output.absolute()} already exists"
+
+	platform = QcomPlatform.from_name(args.platform)
+
+	LOGI("Cloning kernel...")
+	repo = Repo.clone_from(f"{GIT_SERVER}/kernel/msm-{platform.kernel_version}", args.output,
+			multi_options=[f"-b {args.tag}", "--no-tags", "--single-branch"])
+
+	for techpack in platform.techpacks:
+		LOGI(f"Merging {techpack.get_folder()}...")
+		fetch_and_subtree(repo, techpack.url, args.tag, techpack.get_folder())
+
+	for extra_repo in platform.extra_repos:
+		LOGI(f"Merging {extra_repo.folder}...")
+		fetch_and_subtree(repo, extra_repo.url, args.tag, extra_repo.folder)
+
+	LOGI(f"Done, you can find kernel sources in {args.output.absolute()}")
+
+if __name__ == "__main__":
+	main()
