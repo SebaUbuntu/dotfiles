@@ -9,80 +9,53 @@ from typing import Dict, List
 GIT_SERVER = "https://git.codelinaro.org/clo/la"
 PLATFORM_REPOS_PREFIX = f"{GIT_SERVER}/platform"
 
-class _Techpack:
-	_ALL: Dict[str, '_Techpack'] = {}
-
-	def __init__(self, name: str, url: str):
-		self.name = name
-		self.url = url
-
-		_Techpack._ALL[name] = self
-
-	@classmethod
-	def from_name(cls, name: str) -> '_Techpack':
-		return cls._ALL[name]
-
-	def get_folder(self) -> str:
-		return f"techpack/{self.name}"
-
-class _ExtraRepo:
-	_ALL: Dict[str, '_ExtraRepo'] = {}
-
-	def __init__(self, name: str, url: str, folder: str):
-		self.name = name
-		self.url = url
+class Subtree:
+	def __init__(self, folder: str, url: str):
 		self.folder = folder
+		self.url = url
 
-		_ExtraRepo._ALL[name] = self
+# QCACLD
+FW_API = Subtree("drivers/staging/fw-api", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/fw-api")
+QCA_WIFI_HOST_CMN = Subtree("drivers/staging/qca-wifi-host-cmn", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qca-wifi-host-cmn")
+QCACLD_3_0 = Subtree("drivers/staging/qcacld-3.0", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qcacld-3.0")
 
-	@classmethod
-	def from_name(cls, name: str) -> '_ExtraRepo':
-		return cls._ALL[name]
+QCACLD_3_0_REPOS = [FW_API, QCA_WIFI_HOST_CMN, QCACLD_3_0]
 
-class _QcomPlatform:
-	_ALL: Dict[str, '_QcomPlatform'] = {}
+# Techpacks
+TECHPACK_AUDIO = Subtree("techpack/audio", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/audio-kernel")
+TECHPACK_CAMERA = Subtree("techpack/camera", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/camera-kernel")
+TECHPACK_DATA = Subtree("techpack/data", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/data-kernel")
+TECHPACK_DATAIPA = Subtree("techpack/dataipa", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/dataipa")
+TECHPACK_DATARMNET = Subtree("techpack/datarmnet", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet")
+TECHPACK_DATARMNET_EXT = Subtree("techpack/datarmnet-ext", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet-ext")
+TECHPACK_DISPLAY = Subtree("techpack/display", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/display-drivers")
+TECHPACK_VIDEO = Subtree("techpack/video", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/video-driver")
+
+class QcomPlatform:
+	_ALL: Dict[str, 'QcomPlatform'] = {}
 
 	def __init__(self,
 	             name: str,
 	             kernel_version: str,
-	             techpacks: List[_Techpack],
-	             extra_repos: List[_ExtraRepo] = None):
+	             subtrees: List[Subtree] = None):
 		self.name = name
 		self.kernel_version = kernel_version
-		self.techpacks = techpacks
-		self.extra_repos = extra_repos or []
+		self.subtrees = subtrees or []
 
-		_QcomPlatform._ALL[name] = self
+		QcomPlatform._ALL[name] = self
 
 	@classmethod
-	def from_name(cls, name: str) -> '_QcomPlatform':
+	def from_name(cls, name: str) -> 'QcomPlatform':
 		return cls._ALL[name]
 
 	def get_kernel_url(self) -> str:
 		return f"{GIT_SERVER}/kernel/msm-{self.kernel_version}"
 
-class Techpack(_Techpack):
-	AUDIO = _Techpack("audio", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/audio-kernel")
-	CAMERA = _Techpack("camera", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/camera-kernel")
-	DATA = _Techpack("data", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/data-kernel")
-	DATAIPA = _Techpack("dataipa", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/dataipa")
-	DATARMNET = _Techpack("datarmnet", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet")
-	DATARMNET_EXT = _Techpack("datarmnet-ext", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet-ext")
-	DISPLAY = _Techpack("display", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/display-drivers")
-	VIDEO = _Techpack("video", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/video-driver")
-
-class ExtraRepo(_ExtraRepo):
-	FW_API = _ExtraRepo("fw-api", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/fw-api", "drivers/staging/fw-api")
-	QCA_WIFI_HOST_CMN = _ExtraRepo("qca-wifi-host-cmn", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qca-wifi-host-cmn", "drivers/staging/qca-wifi-host-cmn")
-	QCACLD_3_0 = _ExtraRepo("qcacld-3.0", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qcacld-3.0", "drivers/staging/qcacld-3.0")
-
-QCACLD_3_0_REPOS = [ExtraRepo.FW_API, ExtraRepo.QCA_WIFI_HOST_CMN, ExtraRepo.QCACLD_3_0]
-
-class QcomPlatform(_QcomPlatform):
-	SDM845 = _QcomPlatform("sdm845", "4.9", [Techpack.AUDIO], [*QCACLD_3_0_REPOS])
-	SM8150 = _QcomPlatform("sm8150", "4.14", [Techpack.AUDIO, Techpack.DATA], [*QCACLD_3_0_REPOS])
-	SM8250 = _QcomPlatform("sm8250", "4.19", [Techpack.AUDIO, Techpack.CAMERA, Techpack.DATA, Techpack.DISPLAY, Techpack.VIDEO], [*QCACLD_3_0_REPOS])
-	SM8350 = _QcomPlatform("sm8350", "5.4", [Techpack.AUDIO, Techpack.CAMERA, Techpack.DATAIPA, Techpack.DATARMNET, Techpack.DATARMNET_EXT, Techpack.DISPLAY, Techpack.VIDEO], [*QCACLD_3_0_REPOS])
+# Platforms
+SDM845 = QcomPlatform("sdm845", "4.9", [TECHPACK_AUDIO, *QCACLD_3_0_REPOS])
+SM8150 = QcomPlatform("sm8150", "4.14", [TECHPACK_AUDIO, TECHPACK_DATA, *QCACLD_3_0_REPOS])
+SM8250 = QcomPlatform("sm8250", "4.19", [TECHPACK_AUDIO, TECHPACK_CAMERA, TECHPACK_DATA, TECHPACK_DISPLAY, TECHPACK_VIDEO, *QCACLD_3_0_REPOS])
+SM8350 = QcomPlatform("sm8350", "5.4", [TECHPACK_AUDIO, TECHPACK_CAMERA, TECHPACK_DATAIPA, TECHPACK_DATARMNET, TECHPACK_DATARMNET_EXT, TECHPACK_DISPLAY, TECHPACK_VIDEO, *QCACLD_3_0_REPOS])
 
 def fetch_and_subtree(repo: Repo, url: str, tag: str, folder: str):
 	repo.git.fetch(url, tag)
@@ -107,13 +80,9 @@ def main():
 	repo = Repo.clone_from(f"{GIT_SERVER}/kernel/msm-{platform.kernel_version}", args.output,
 			multi_options=[f"-b {args.tag}", "--no-tags", "--single-branch"])
 
-	for techpack in platform.techpacks:
-		LOGI(f"Merging {techpack.get_folder()}...")
-		fetch_and_subtree(repo, techpack.url, args.tag, techpack.get_folder())
-
-	for extra_repo in platform.extra_repos:
-		LOGI(f"Merging {extra_repo.folder}...")
-		fetch_and_subtree(repo, extra_repo.url, args.tag, extra_repo.folder)
+	for subtree in platform.subtrees:
+		LOGI(f"Merging {subtree.folder}...")
+		fetch_and_subtree(repo, subtree.url, args.tag, subtree.folder)
 
 	LOGI(f"Done, you can find kernel sources in {args.output.absolute()}")
 
