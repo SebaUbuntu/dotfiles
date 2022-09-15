@@ -32,8 +32,6 @@ TECHPACK_DISPLAY = Subtree("techpack/display", f"{PLATFORM_REPOS_PREFIX}/vendor/
 TECHPACK_VIDEO = Subtree("techpack/video", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/video-driver")
 
 class QcomPlatform:
-	_ALL: Dict[str, 'QcomPlatform'] = {}
-
 	def __init__(self,
 	             name: str,
 	             kernel_version: str,
@@ -42,20 +40,65 @@ class QcomPlatform:
 		self.kernel_version = kernel_version
 		self.subtrees = subtrees or []
 
-		QcomPlatform._ALL[name] = self
-
-	@classmethod
-	def from_name(cls, name: str) -> 'QcomPlatform':
-		return cls._ALL[name]
-
 	def get_kernel_url(self) -> str:
 		return f"{GIT_SERVER}/kernel/msm-{self.kernel_version}"
 
 # Platforms
+MSM8996 = QcomPlatform("msm8996", "3.18")
+MSM8953_4_9 = QcomPlatform("msm8953", "4.9", [TECHPACK_AUDIO, *QCACLD_3_0_REPOS])
+MSM8998 = QcomPlatform("msm8998", "4.4", [*QCACLD_3_0_REPOS])
+SDM660_4_14 = QcomPlatform("sdm660", "4.14", [TECHPACK_AUDIO, *QCACLD_3_0_REPOS])
+SDM660_4_19 = QcomPlatform("sdm660", "4.19", [TECHPACK_AUDIO, *QCACLD_3_0_REPOS])
 SDM845 = QcomPlatform("sdm845", "4.9", [TECHPACK_AUDIO, *QCACLD_3_0_REPOS])
 SM8150 = QcomPlatform("sm8150", "4.14", [TECHPACK_AUDIO, TECHPACK_DATA, *QCACLD_3_0_REPOS])
 SM8250 = QcomPlatform("sm8250", "4.19", [TECHPACK_AUDIO, TECHPACK_CAMERA, TECHPACK_DATA, TECHPACK_DISPLAY, TECHPACK_VIDEO, *QCACLD_3_0_REPOS])
 SM8350 = QcomPlatform("sm8350", "5.4", [TECHPACK_AUDIO, TECHPACK_CAMERA, TECHPACK_DATAIPA, TECHPACK_DATARMNET, TECHPACK_DATARMNET_EXT, TECHPACK_DISPLAY, TECHPACK_VIDEO, *QCACLD_3_0_REPOS])
+
+TAG_PREFIX_TO_PLATFORM = {
+	# Android 10
+	"LA.UM.8.1": SM8150,
+	"LA.UM.8.2": MSM8998, # sdm660
+	"LA.UM.8.2.1": SDM660_4_14,
+	"LA.UM.8.3": SDM845,
+	"LA.UM.8.4": MSM8998,
+	"LA.UM.8.4.1": MSM8998,
+	"LA.UM.8.6": MSM8996, # msm8953
+	"LA.UM.8.6.2": MSM8953_4_9,
+	"LA.UM.8.8": SDM845, # sdm710
+	"LA.UM.8.9": SM8150, # atoll
+	"LA.UM.8.11": SM8150, # trinket
+	"LA.UM.8.12": SM8250,
+	"LA.UM.8.13": SM8250, # lito
+	"LA.UM.8.15": SM8250, # bengal
+
+	# Android 11
+	"LA.UM.9.1": SM8150,
+	"LA.UM.9.1.1": SM8150, # atoll
+	"LA.UM.9.2": MSM8998, # sdm660
+	"LA.UM.9.2.1": SDM660_4_19,
+	"LA.UM.9.3": SDM845,
+	"LA.UM.9.6.2": MSM8953_4_9,
+	"LA.UM.9.8": SDM845, # sdm710
+	"LA.UM.9.11": SM8150, # trinket
+	"LA.UM.9.12": SM8250,
+	"LA.UM.9.14": SM8350,
+	"LA.UM.9.15": SM8250, # bengal
+	"LA.UM.9.16": SM8350, # holi
+
+	# Android 12
+	"LA.UM.10.2.1": SDM660_4_19,
+	"LA.UM.10.3": SDM845,
+	"LA.UM.10.6.2": MSM8953_4_9,
+}
+
+def get_platform_from_tag(tag: str) -> QcomPlatform:
+	for prefix, platform in TAG_PREFIX_TO_PLATFORM.items():
+		if not tag.startswith(f"{prefix}.r") and not tag.startswith(f"{prefix}.c"):
+			continue
+
+		return platform
+
+	raise ValueError(f"Unknown platform for tag {tag}")
 
 def fetch_and_subtree(repo: Repo, url: str, tag: str, folder: str):
 	repo.git.fetch(url, tag)
@@ -67,14 +110,13 @@ def main():
 	setup_logging()
 
 	parser = ArgumentParser()
-	parser.add_argument("platform", help="Platform name (e.g. sm8250)")
 	parser.add_argument("tag", help="CLO release tag (e.g. LA.UM.9.12.r1-14300.01-SMxx50.QSSI13.0)")
 	parser.add_argument("output", help="Folder output (must not exist)", type=Path)
 	args = parser.parse_args()
 
 	assert not args.output.exists(), f"Output folder {args.output.absolute()} already exists"
 
-	platform = QcomPlatform.from_name(args.platform)
+	platform = get_platform_from_tag(args.tag)
 
 	LOGI("Cloning kernel...")
 	repo = Repo.clone_from(f"{GIT_SERVER}/kernel/msm-{platform.kernel_version}", args.output,
