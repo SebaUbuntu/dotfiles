@@ -1,0 +1,6 @@
+# Ignore all files and directories (not recursively)
+/*
+
+# Allow files
+!/.gitignore
+!/sebaubuntu.conf

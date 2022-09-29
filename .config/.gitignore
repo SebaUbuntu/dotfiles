@@ -2,15 +2,7 @@
 /*
 
 # Allow directories (they must have a .gitignore file inside)
-!/.config/
-!/.fonts/
-!/.ssh/
-!/bin/
+!/pipewire/
 
 # Allow files
-!/.bashrc-overlay
 !/.gitignore
-!/.xprofile
-!/README.md
-!/setup.sh
-!/wallpaper.jpg
