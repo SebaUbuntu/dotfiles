@@ -52,3 +52,7 @@ mkdir -p ~/.git/hooks
 git config --global core.hooksPath ~/.git/hooks
 curl -Lo ~/.git/hooks/commit-msg https://review.lineageos.org/tools/hooks/commit-msg
 chmod u+x ~/.git/hooks/commit-msg
+
+# Add Nautilus "New document" templates
+mkdir -p "$(xdg-user-dir TEMPLATES)"
+touch "$(xdg-user-dir TEMPLATES)/Empty text file.txt"
