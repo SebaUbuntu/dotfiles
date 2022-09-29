@@ -1,23 +1,15 @@
-# Ignore everything
-*
+# Ignore all files and directories (not recursively)
+/*
 
-# Allow gitignore ;-;
-!/.gitignore
+# Allow directories (they must have a .gitignore file inside)
+!/.fonts/
+!/.ssh/
+!/bin/
 
-# Scripts
-!/bin/*
-
-# bashrc overlays
+# Allow files
 !/.bashrc-overlay
-
-# xprofile
+!/.gitignore
 !/.xprofile
-
-# Fonts
-!/.fonts/*
-
-# ...but ignore UUID
-/.fonts/.uuid
-
-# Wallpaper
+!/README.md
+!/setup.sh
 !/wallpaper.jpg
