@@ -1,0 +1,28 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+from pathlib import Path
+from subprocess import run
+from sys import stderr, stdout
+from typing import List
+
+def main():
+	argparse = ArgumentParser()
+	argparse.add_argument('src', type=Path)
+
+	args = argparse.parse_args()
+
+	files: List[str] = [
+		file.strip() for file in args.src.read_text().splitlines()
+		if file.strip() and not file.strip().startswith("#")
+	]
+	for file in files:
+		assert Path(file).is_file(), f"{file} not found"
+
+	for file in files:
+		device_path = f"/{file}"
+		run(["adb", "shell", "rm", "-f", device_path], check=True, stderr=stderr, stdout=stdout)
+		run(["adb", "push", file, device_path], check=True, stderr=stderr, stdout=stdout)
+
+if __name__ == '__main__':
+	main()

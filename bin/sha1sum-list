@@ -1,0 +1,60 @@
+#!/usr/bin/env python
+
+from argparse import ArgumentParser
+from hashlib import sha1
+from pathlib import Path
+from subprocess import run
+from sys import stderr, stdout
+from typing import List
+
+def sha1sum(file: Path) -> str:
+	digest = sha1()
+	with file.open("rb") as f:
+		while chunk := f.read(1024):
+			digest.update(chunk)
+
+	return digest.hexdigest()
+
+def main():
+	argparse = ArgumentParser()
+	argparse.add_argument('src', type=Path)
+
+	args = argparse.parse_args()
+
+	old_list: List[str] = args.src.read_text().splitlines()
+	new_list: List[str] = []
+	for line in old_list:
+		stripped_line = line.strip()
+		if not stripped_line or stripped_line.startswith("#"):
+			new_list.append(line)
+			continue
+
+		src, dst, hexdigest = None, None, None
+
+		if "|" in stripped_line:
+			src, hexdigest = stripped_line.split("|")
+		else:
+			src = stripped_line
+
+		if ":" in src:
+			src, dst = src.split(":")
+		else:
+			dst = src
+
+		if Path(src).is_file():
+			hexdigest = sha1sum(Path(src))
+		else:
+			print(f"{src} not found, skipping")
+
+		new_line = src
+		if dst != src:
+			new_line += f":{dst}"
+		if hexdigest:
+			new_line += f"|{hexdigest}"
+		
+		new_list.append(new_line)
+
+	print("\n".join(new_list))
+
+if __name__ == '__main__':
+	main()

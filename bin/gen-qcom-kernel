@@ -1,13 +1,14 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 
 from argparse import ArgumentParser
 from git import Repo
+from git.exc import GitCommandError
 from pathlib import Path
 from sebaubuntu_libs.liblogging import LOGI, setup_logging
-from typing import Dict, List
+from typing import List
 
-GIT_SERVER = "https://git.codelinaro.org/clo/la"
-PLATFORM_REPOS_PREFIX = f"{GIT_SERVER}/platform"
+CAF_GIT_SERVER = "https://source.codeaurora.org/quic/la"
+CLO_GIT_SERVER = "https://git.codelinaro.org/clo/la"
 
 class Subtree:
 	def __init__(self, folder: str, url: str):
@@ -15,21 +16,21 @@ class Subtree:
 		self.url = url
 
 # QCACLD
-FW_API = Subtree("drivers/staging/fw-api", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/fw-api")
-QCA_WIFI_HOST_CMN = Subtree("drivers/staging/qca-wifi-host-cmn", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qca-wifi-host-cmn")
-QCACLD_3_0 = Subtree("drivers/staging/qcacld-3.0", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/wlan/qcacld-3.0")
+FW_API = Subtree("drivers/staging/fw-api", "platform/vendor/qcom-opensource/wlan/fw-api")
+QCA_WIFI_HOST_CMN = Subtree("drivers/staging/qca-wifi-host-cmn", "platform/vendor/qcom-opensource/wlan/qca-wifi-host-cmn")
+QCACLD_3_0 = Subtree("drivers/staging/qcacld-3.0", "platform/vendor/qcom-opensource/wlan/qcacld-3.0")
 
 QCACLD_3_0_REPOS = [FW_API, QCA_WIFI_HOST_CMN, QCACLD_3_0]
 
 # Techpacks
-TECHPACK_AUDIO = Subtree("techpack/audio", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/audio-kernel")
-TECHPACK_CAMERA = Subtree("techpack/camera", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/camera-kernel")
-TECHPACK_DATA = Subtree("techpack/data", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom-opensource/data-kernel")
-TECHPACK_DATAIPA = Subtree("techpack/dataipa", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/dataipa")
-TECHPACK_DATARMNET = Subtree("techpack/datarmnet", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet")
-TECHPACK_DATARMNET_EXT = Subtree("techpack/datarmnet-ext", f"{PLATFORM_REPOS_PREFIX}/vendor/qcom/opensource/datarmnet-ext")
-TECHPACK_DISPLAY = Subtree("techpack/display", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/display-drivers")
-TECHPACK_VIDEO = Subtree("techpack/video", f"{PLATFORM_REPOS_PREFIX}/vendor/opensource/video-driver")
+TECHPACK_AUDIO = Subtree("techpack/audio", "platform/vendor/opensource/audio-kernel")
+TECHPACK_CAMERA = Subtree("techpack/camera", "platform/vendor/opensource/camera-kernel")
+TECHPACK_DATA = Subtree("techpack/data", "platform/vendor/qcom-opensource/data-kernel")
+TECHPACK_DATAIPA = Subtree("techpack/dataipa", "platform/vendor/opensource/dataipa")
+TECHPACK_DATARMNET = Subtree("techpack/datarmnet", "platform/vendor/qcom/opensource/datarmnet")
+TECHPACK_DATARMNET_EXT = Subtree("techpack/datarmnet-ext", "platform/vendor/qcom/opensource/datarmnet-ext")
+TECHPACK_DISPLAY = Subtree("techpack/display", "platform/vendor/opensource/display-drivers")
+TECHPACK_VIDEO = Subtree("techpack/video", "platform/vendor/opensource/video-driver")
 
 class QcomPlatform:
 	def __init__(self,
@@ -40,8 +41,7 @@ class QcomPlatform:
 		self.kernel_version = kernel_version
 		self.subtrees = subtrees or []
 
-	def get_kernel_url(self) -> str:
-		return f"{GIT_SERVER}/kernel/msm-{self.kernel_version}"
+		self.kernel_url = f"kernel/msm-{self.kernel_version}"
 
 # Platforms
 MSM8996 = QcomPlatform("msm8996", "3.18")
@@ -119,12 +119,20 @@ def main():
 	platform = get_platform_from_tag(args.tag)
 
 	LOGI("Cloning kernel...")
-	repo = Repo.clone_from(f"{GIT_SERVER}/kernel/msm-{platform.kernel_version}", args.output,
-			multi_options=[f"-b {args.tag}", "--no-tags", "--single-branch"])
+	# Try CLO
+	git_server = CLO_GIT_SERVER
+	try:
+		repo = Repo.clone_from(f"{git_server}/{platform.kernel_url}", args.output,
+		                       multi_options=[f"-b {args.tag}", "--no-tags", "--single-branch"])
+	except GitCommandError:
+		# Try CAF
+		git_server = CAF_GIT_SERVER
+		repo = Repo.clone_from(f"{git_server}/{platform.kernel_url}", args.output,
+		                       multi_options=[f"-b {args.tag}", "--no-tags", "--single-branch"])
 
 	for subtree in platform.subtrees:
 		LOGI(f"Merging {subtree.folder}...")
-		fetch_and_subtree(repo, subtree.url, args.tag, subtree.folder)
+		fetch_and_subtree(repo, f"{git_server}/{subtree.url}", args.tag, subtree.folder)
 
 	LOGI(f"Done, you can find kernel sources in {args.output.absolute()}")
 
