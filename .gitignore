@@ -4,6 +4,7 @@
 # Allow directories (they must have a .gitignore file inside)
 !/.config/
 !/.fonts/
+!/.githooks/
 !/.ssh/
 !/bin/
 

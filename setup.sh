@@ -50,7 +50,9 @@ git config --global user.email "${GIT_USER_EMAIL}"
 # Add the Gerrit Change-id hook
 mkdir -p ~/.git/hooks
 git config --global core.hooksPath ~/.git/hooks
-curl -Lo ~/.git/hooks/commit-msg https://review.lineageos.org/tools/hooks/commit-msg
+#curl -Lo ~/.git/hooks/commit-msg https://review.lineageos.org/tools/hooks/commit-msg
+rm -f ~/.git/hooks/commit-msg
+ln -s ~/.githooks/commit-msg ~/.git/hooks/commit-msg
 chmod u+x ~/.git/hooks/commit-msg
 
 # Add Nautilus "New document" templates
