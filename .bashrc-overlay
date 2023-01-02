@@ -30,3 +30,6 @@ else
 fi
 
 alias pip3.9="python3.9 -m pip"
+
+# Add gem to PATH
+export PATH="$PATH:~/.local/share/gem/ruby/3.0.0/bin"

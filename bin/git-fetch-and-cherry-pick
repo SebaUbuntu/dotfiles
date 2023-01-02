@@ -1,0 +1,13 @@
+#!/bin/bash
+#
+# Copyright (C) 2022 Sebastiano Barezzi
+#
+# SPDX-License-Identifier: Apache-2.0
+#
+
+if [ -z "${2}" ]; then
+    echo "Usage: $0 <remote> <commit hash>"
+    exit 1
+fi
+
+git fetch "${1}" "${2}" && git cherry-pick "${2}"

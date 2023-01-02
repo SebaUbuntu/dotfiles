@@ -11,7 +11,7 @@
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 GIT_USER_NAME="Sebastiano Barezzi"
-GIT_USER_EMAIL="barezzisebastiano@gmail.com"
+GIT_USER_EMAIL="seba@sebaubuntu.dev"
 
 packageinstall() {
 	echo "Installing package(s): $1"
