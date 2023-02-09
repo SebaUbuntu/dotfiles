@@ -1,2 +1,9 @@
-# Ignore UUID
-/.uuid
+# Ignore all files and directories (not recursively)
+/*
+
+# Allow directories (they must have a .gitignore file inside)
+!/Google Sans/
+!/Monserrat/
+!/Product Sans/
+!/Roboto/
+!/Roboto Mono/
