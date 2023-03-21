@@ -2,6 +2,7 @@
 /*
 
 # Allow directories (they must have a .gitignore file inside)
+!/easyeffects/
 !/pipewire/
 
 # Allow files

@@ -1,0 +1,37 @@
+# Ignore all files and directories (not recursively)
+/*
+
+# Allow this gitignore
+!/.gitignore
+
+# Allow files
+!/adb-push-list
+!/applychangeid
+!/audit2allow
+!/copy-kernel-modules-aosp
+!/cpio
+!/dts-differ
+!/eat-but-from-wish
+!/extract-fw-ihex
+!/extract-ikconfig
+!/extract-initramfs
+!/extract-vmlinux
+!/gen-qcom-kernel
+!/get-included-dtsi
+!/git-dontkang
+!/git-fetch-and-cherry-pick
+!/git-fixup-and-rebase
+!/git-remove-xiaomi-comments
+!/git-reset-folder
+!/git-reset-permission-changes
+!/git-rewrite-history
+!/hexdiff
+!/lineagepush
+!/mannaggia
+!/merge-subtree
+!/needed-libs
+!/qdcm_validator.py
+!/repo
+!/sdat2img
+!/sha1sum-list
+!/test-kernel
