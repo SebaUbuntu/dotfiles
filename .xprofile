@@ -1,6 +1,0 @@
-#!/bin/sh
-# Both my displays doesn't correctly report its EDID
-# so I need to set the right resolution manually at boot
-xrandr --newmode "1440x900_60.00"  106.50  1440 1528 1672 1904  900 903 909 934 -hsync +vsync
-xrandr --addmode HDMI-A-0 1440x900_60.00
-xrandr --addmode DVI-D-0 1440x900_60.00

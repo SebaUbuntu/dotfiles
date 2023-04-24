@@ -11,7 +11,6 @@
 # Allow files
 !/.bashrc-overlay
 !/.gitignore
-!/.xprofile
 !/README.md
 !/setup.sh
 !/wallpaper.jpg
