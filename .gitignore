@@ -1,6 +1,9 @@
 # Ignore all files and directories (not recursively)
 /*
 
+# Allow this gitignore
+!/.gitignore
+
 # Allow directories (they must have a .gitignore file inside)
 !/.config/
 !/.fonts/
@@ -10,7 +13,6 @@
 
 # Allow files
 !/.bashrc-overlay
-!/.gitignore
 !/README.md
 !/setup.sh
 !/wallpaper.jpg
