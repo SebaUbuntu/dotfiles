@@ -7,6 +7,8 @@
 
 # Variables
 AOSP_MAIN_DIR="/mnt/data/Android"
+ANDROID_NDK_VERSION="25.2.9519653"
+ANDROID_BUILD_TOOLS_VERSION="34.0.0-rc4"
 
 # Add ~/bin to PATH, so scripts inside it can be executed
 export PATH="~/bin:$PATH"
@@ -28,8 +30,8 @@ if [ -f "build/envsetup.sh" ]; then
 else
 	export ANDROID_HOME=~/Android/Sdk
 	export ANDROID_SDK_ROOT="${ANDROID_HOME}"
-	export ANDROID_NDK_HOME="${ANDROID_SDK_ROOT}/ndk/25.0.8775105"
-	export PATH="${PATH}:${ANDROID_HOME}/build-tools/33.0.2"
+	export ANDROID_NDK_HOME="${ANDROID_SDK_ROOT}/ndk/${ANDROID_NDK_VERSION}"
+	export PATH="${PATH}:${ANDROID_HOME}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}"
 	export PATH="${PATH}:${ANDROID_HOME}/tools"
 	export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
 fi
