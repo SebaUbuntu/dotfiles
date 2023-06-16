@@ -13,6 +13,9 @@ ANDROID_BUILD_TOOLS_VERSION="34.0.0-rc4"
 # Add ~/bin to PATH, so scripts inside it can be executed
 export PATH="~/bin:$PATH"
 
+# Add ~/.local/bin to PATH, so scripts inside it can be executed
+export PATH="$PATH:/home/seba/.local/bin"
+
 # Enable ccache on AOSP building
 export USE_CCACHE=1
 export CCACHE_EXEC=/usr/bin/ccache
