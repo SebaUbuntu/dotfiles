@@ -1,0 +1,6 @@
+[submodule ".themes"]
+	path = .themes
+	url = https://github.com/ZorinOS/zorin-desktop-themes
+[submodule ".icons"]
+	path = .icons
+	url = https://github.com/ZorinOS/zorin-icon-themes

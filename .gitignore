@@ -11,6 +11,10 @@
 !/.ssh/
 !/bin/
 
+# Allow submodules
+!/.icons
+!/.themes
+
 # Allow files
 !/.bashrc-overlay
 !/README.md
