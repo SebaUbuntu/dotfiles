@@ -8,6 +8,7 @@
 !/.config/
 !/.fonts/
 !/.githooks/
+!/.local/
 !/.ssh/
 !/bin/
 
