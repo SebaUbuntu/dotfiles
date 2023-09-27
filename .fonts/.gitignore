@@ -2,6 +2,7 @@
 /*
 
 # Allow directories (they must have a .gitignore file inside)
+!/Cascadia Code/
 !/Google Sans/
 !/Monserrat/
 !/Product Sans/

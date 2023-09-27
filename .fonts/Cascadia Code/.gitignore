@@ -1,0 +1,9 @@
+# Ignore all files and directories (not recursively)
+/*
+
+# Allow this gitignore
+!/.gitignore
+
+# Allow files
+!/*.ttf
+!/LICENSE
