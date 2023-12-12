@@ -8,7 +8,7 @@
 from argparse import ArgumentParser
 from enum import Enum
 from pathlib import Path
-from typing import Dict, List, FrozenSet, Iterable
+from typing import List, Iterable, Optional
 from xml.etree import ElementTree
 
 class DynamicRange(Enum):
@@ -30,7 +30,7 @@ class Mode:
 		name: str,
 		dynamic_range: DynamicRange,
 		color_gamut: ColorGamut,
-		picture_quality: PictureQuality,
+		picture_quality: Optional[PictureQuality],
 		features: Iterable[int],
 	):
 		self.name = name
@@ -79,12 +79,14 @@ class CalibrationData:
 			assert num_features == len(mode) + 6, \
 				f"Wrong number of features {num_features} for mode ID {mode_id}, expected {len(mode) + 6}, got {num_features}"
 
+			picture_quality = mode.attrib.get("PictureQuality")
+
 			modes.append(
 				Mode(
 					name=mode.attrib["Name"],
 					dynamic_range=DynamicRange(mode.attrib["DynamicRange"]),
 					color_gamut=ColorGamut(mode.attrib["ColorGamut"]),
-					picture_quality=PictureQuality(mode.attrib["PictureQuality"]),
+					picture_quality=PictureQuality(picture_quality) if picture_quality else None,
 					features=[int(feature.attrib["FeatureType"]) for feature in mode],
 				)
 			)
@@ -92,6 +94,75 @@ class CalibrationData:
 		return cls(modes=modes, default_mode=default_mode)
 
 MODELS = {
+	"sm8150": CalibrationData(
+		default_mode=0,
+		modes=[
+			# qdcm_calib_data_default.xml
+			Mode(
+				name="native",
+				dynamic_range=DynamicRange.SDR,
+				color_gamut=ColorGamut.NATIVE,
+				picture_quality=None,
+				features=[
+					2,
+					3,
+					7,
+					8,
+					14,
+					20,
+					22,
+				],
+			),
+			Mode(
+				name="HDR",
+				dynamic_range=DynamicRange.HDR,
+				color_gamut=ColorGamut.DCI_P3,
+				picture_quality=PictureQuality.STANDARD,
+				features=[
+					2,
+					3,
+					4,
+					7,
+					8,
+					14,
+					20,
+					22,
+					28,
+				],
+			),
+			Mode(
+				name="P3",
+				dynamic_range=DynamicRange.SDR,
+				color_gamut=ColorGamut.DCI_P3,
+				picture_quality=PictureQuality.STANDARD,
+				features=[
+					2,
+					3,
+					4,
+					7,
+					8,
+					14,
+					20,
+					22,
+				],
+			),
+			Mode(
+				name="sRGB",
+				dynamic_range=DynamicRange.SDR,
+				color_gamut=ColorGamut.SRGB,
+				picture_quality=PictureQuality.STANDARD,
+				features=[
+					2,
+					3,
+					7,
+					8,
+					14,
+					20,
+					22,
+				],
+			),
+		],
+	),
 	"sm8250": CalibrationData(
 		default_mode=0,
 		modes=[
