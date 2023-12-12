@@ -5,19 +5,15 @@
 !/.gitignore
 
 # Allow files
-!/adb-push-list
-!/applychangeid
-!/audit2allow
 !/copy-kernel-modules-aosp
-!/cpio
 !/dts-differ
 !/eat-but-from-wish
 !/extract-fw-ihex
 !/extract-ikconfig
-!/extract-initramfs
 !/extract-vmlinux
 !/gen-qcom-kernel
 !/get-included-dtsi
+!/git-applychangeid
 !/git-dontkang
 !/git-fetch-and-cherry-pick
 !/git-fixup-and-rebase
@@ -27,7 +23,6 @@
 !/git-rewrite-history
 !/hexdiff
 !/lineagepush
-!/mannaggia
 !/merge-subtree
 !/needed-libs
 !/qdcm_validator.py

@@ -1,12 +1,44 @@
 #!/bin/bash
 
-KERNEL="${1}"
-shift
+ADDITIONAL_ARGS=()
 
-qemu-system-x86_64 \
+while [ "${#}" -gt 0 ]; do
+    case "${1}" in
+        -k | --kernel)
+            KERNEL="${2}"
+            shift
+            ;;
+        -a | --arch)
+            TARGET_ARCH="${2}"
+            shift
+            ;;
+        *)
+            ADDITIONAL_ARGS+=("${1}")
+            ;;
+    esac
+    shift
+done
+
+if [ "${KERNEL}" = "" ] || [ "${TARGET_ARCH}" = "" ]; then
+    echo "test-kernel -k <kernel> -a <arch> [additional qemu args]"
+    exit
+fi
+
+if [ ! -f "${KERNEL}" ]; then
+    echo "Kernel file not found"
+    exit
+fi
+
+QEMU_BIN="qemu-system-${TARGET_ARCH}"
+
+if ! command -v "${QEMU_BIN}" &> /dev/null; then
+    echo "Target arch ${TARGET_ARCH} not supported, ${QEMU_BIN} not found"
+    exit
+fi
+
+"${QEMU_BIN}" \
     -kernel "${KERNEL}" \
     -append "console=ttyS0" \
     -m 512 \
-    -initrd ramdisk.img \
     --enable-kvm \
     "${@}"
