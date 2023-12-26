@@ -6,24 +6,34 @@
 #
 
 # Variables
-AOSP_MAIN_DIR="/mnt/data/Android"
 ANDROID_NDK_VERSION="25.2.9519653"
 ANDROID_BUILD_TOOLS_VERSION="34.0.0"
 
 # Add ~/bin to PATH, so scripts inside it can be executed
-export PATH="$PATH:~/bin"
+export PATH="${PATH}:~/bin"
 
 # Add ~/.local/bin to PATH, so scripts inside it can be executed
-export PATH="$PATH:~/.local/bin"
+export PATH="${PATH}:~/.local/bin"
 
-# Enable ccache on AOSP building
-export USE_CCACHE=1
-export CCACHE_EXEC=/usr/bin/ccache
-if [ -d "/mnt/data/ccache" ]; then
-	export CCACHE_DIR=/mnt/data/ccache
-else
-	export CCACHE_DIR=~/ccache
+# Enable ccache on AOSP building if ccache is installed
+CCACHE_EXEC="/usr/bin/ccache"
+if [ -f "${CCACHE_EXEC}" ]; then
+	# Also check if we have a valid ccache folder
+	for location in "/mnt/data/ccache" "~/ccache"; do
+		if [ -d "${location}" ]; then
+			export USE_CCACHE=1
+			export CCACHE_EXEC="${CCACHE_EXEC}"
+			export CCACHE_DIR="${location}"
+			break
+		fi
+	done
 fi
+
+# Add gem to PATH
+export PATH="$PATH:~/.local/share/gem/ruby/3.0.0/bin"
+
+# Enable pipx completions
+eval "$(register-python-argcomplete pipx)"
 
 # Source build/envsetup.sh if found
 if [ -f "build/envsetup.sh" ]; then
@@ -31,18 +41,10 @@ if [ -f "build/envsetup.sh" ]; then
 	source build/envsetup.sh
 	echo "Done"
 else
-	export ANDROID_HOME=~/Android/Sdk
+	export ANDROID_HOME="~/Android/Sdk"
 	export ANDROID_SDK_ROOT="${ANDROID_HOME}"
 	export ANDROID_NDK_HOME="${ANDROID_SDK_ROOT}/ndk/${ANDROID_NDK_VERSION}"
 	export PATH="${PATH}:${ANDROID_HOME}/build-tools/${ANDROID_BUILD_TOOLS_VERSION}"
 	export PATH="${PATH}:${ANDROID_HOME}/tools"
 	export PATH="${PATH}:${ANDROID_HOME}/platform-tools"
 fi
-
-alias pip3.9="python3.9 -m pip"
-
-# Add gem to PATH
-export PATH="$PATH:~/.local/share/gem/ruby/3.0.0/bin"
-
-# Enable pipx completions
-eval "$(register-python-argcomplete pipx)"
