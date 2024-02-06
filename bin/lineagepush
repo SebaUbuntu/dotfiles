@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e
+
 USER="SebaUbuntu"
 SERVER="review.lineageos.org"
 PORT="29418"
@@ -38,22 +40,51 @@ done
 
 if [ "${BRANCH}" = "" ]; then
     echo "Branch is empty"
-    exit
+    exit 1
+fi
+
+REPOS=()
+
+if [ "${REPO}" = "" ]; then
+    for remote in $(git remote); do
+        url="$(git remote get-url --push ${remote})"
+        if [[ "${url}" == ${REMOTE_PREFIX_HTTPS}* ]]; then
+            REPOS+=("${url#"$REMOTE_PREFIX_HTTPS"}")
+        elif [[ "${url}" == ${REMOTE_PREFIX_GIT}* ]]; then
+            REPOS+=("${url#"$REMOTE_PREFIX_GIT"}")
+        elif [[ "${url}" == ${REMOTE_PREFIX_SSH}* ]]; then
+            REPOS+=("${url#"$REMOTE_PREFIX_SSH"}")
+        fi
+    done
+else
+    REPOS+=("${REPO}")
+fi
+
+if [ "${#REPOS[@]}" -eq 0 ]; then
+    echo "No remote found"
+    exit 1
+fi
+
+if [ "${#REPOS[@]}" -gt 1 ]; then
+    echo "Multiple remotes found, select one:"
+    for i in "${!REPOS[@]}"; do
+        echo "[$i] ${REPOS[$i]}"
+    done
+    read -p "Enter the number: " -r
+
+    if ! [[ $REPLY =~ ^[0-9]+$ ]] || [ "${REPLY}" -lt 0 ] || [ "${REPLY}" -ge "${#REPOS[@]}" ]; then
+        echo "Invalid input"
+        exit 1
+    fi
+
+    REPO="${REPOS[$REPLY]}"
+else
+    REPO="${REPOS[0]}"
 fi
 
 if [ "${REPO}" = "" ]; then
-    for remote in $(git remote -v | awk '{print $2}'); do
-        if [[ "${remote}" == ${REMOTE_PREFIX_HTTPS}* ]]; then
-            REPO=${remote#"$REMOTE_PREFIX_HTTPS"}
-            break
-        elif [[ "${remote}" == ${REMOTE_PREFIX_GIT}* ]]; then
-            REPO=${remote#"$REMOTE_PREFIX_GIT"}
-            break
-        elif [[ "${remote}" == ${REMOTE_PREFIX_SSH}* ]]; then
-            REPO=${remote#"$REMOTE_PREFIX_SSH"}
-            break
-        fi
-    done
+    echo "Repo is empty"
+    exit 1
 fi
 
 git push "ssh://${USER}@${SERVER}:${PORT}/${PREFIX}/${REPO}" "${BRANCH}" ${ADDITIONAL_ARGS[@]}
