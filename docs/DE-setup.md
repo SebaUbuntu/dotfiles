@@ -21,13 +21,14 @@ Using GNOME on EndeavourOS
 - Remove gnome-console
 - Install gnome-menus (for arcmenu)
 - Install gnome-shell-extension-appindicator, libappindicator-gtk2 and libappindicator-gtk3
+- Install gnome-shell-extension-dash-to-panel
+- Install gnome-shell-extension-gtk4-desktop-icons-ng
 - Install meld
 - Install shared-mime-info-gnome
 - Install openrgb and i2c-tools
 - Install android-tools
 - Install gnome-remote-desktop
 - Install htop
-- Install lineageos-devel
 - Install python-pipx
 - Install slack-desktop
 - Install python-virtualenv
@@ -37,6 +38,7 @@ Using GNOME on EndeavourOS
 - Enable AUR in settings
 
 ## GNOME Settings
+
 - Disable active angle
 - Set number of workspaces to 1
 - Set power profile to performance
@@ -45,8 +47,8 @@ Using GNOME on EndeavourOS
 
 - appindicator-support (system)
 - arcmenu
-- dash-to-panel
-- gtk4-desktop-icons-ng-ding
+- dash-to-panel (system)
+- gtk4-desktop-icons-ng (system)
 
 ## GNOME tweaks
 
