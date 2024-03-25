@@ -23,6 +23,10 @@ while [ "${#}" -gt 0 ]; do
             ADDITIONAL_ARGS+=("-o l=Code-Review${2}")
             shift
             ;;
+        --merge_sha)
+            MERGE_SHA="${2}"
+            shift
+            ;;
         -r | --repo)
             REPO="${2}"
             shift
@@ -85,6 +89,19 @@ fi
 if [ "${REPO}" = "" ]; then
     echo "Repo is empty"
     exit 1
+fi
+
+if [ "${MERGE_SHA}" != "" ]; then
+    FIRST_SHA="$(git show -s --pretty=%P ${MERGE_SHA} | cut -d ' ' -f 1)"
+    SECOND_SHA="$(git show -s --pretty=%P ${MERGE_SHA} | cut -d ' ' -f 2)"
+
+    if [ "${FIRST_SHA}" = "" ] || [ "${SECOND_SHA}" = "" ]; then
+        echo "Merge SHA is invalid"
+        exit 1
+    fi
+
+    ADDITIONAL_ARGS+=("-o base=${FIRST_SHA}")
+    ADDITIONAL_ARGS+=("-o base=${SECOND_SHA}")
 fi
 
 git push "ssh://${USER}@${SERVER}:${PORT}/${PREFIX}/${REPO}" "${BRANCH}" ${ADDITIONAL_ARGS[@]}

@@ -19,7 +19,7 @@ Using GNOME on EndeavourOS
 - Install gnome-terminal
 - Remove xterm and uxterm
 - Remove gnome-console
-- Install gnome-menus (for arcmenu)
+- Install gnome-shell-extension-arc-menu
 - Install gnome-shell-extension-appindicator, libappindicator-gtk2 and libappindicator-gtk3
 - Install gnome-shell-extension-dash-to-panel
 - Install gnome-shell-extension-gtk4-desktop-icons-ng
