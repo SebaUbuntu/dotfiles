@@ -11,6 +11,7 @@ Using GNOME on EndeavourOS
 - Install telegram-desktop
 - Install visual-studio-code-bin
 - Install android-studio
+- Install android-studio-for-platform
 - Install element-desktop
 - Install gitkraken
 - Install lineageos-devel
@@ -23,6 +24,7 @@ Using GNOME on EndeavourOS
 - Install gnome-shell-extension-appindicator, libappindicator-gtk2 and libappindicator-gtk3
 - Install gnome-shell-extension-dash-to-panel
 - Install gnome-shell-extension-gtk4-desktop-icons-ng
+- Install gnome-shell-extension-freon
 - Install meld
 - Install shared-mime-info-gnome
 - Install openrgb and i2c-tools
