@@ -5,6 +5,7 @@
 !/.gitignore
 
 # Allow files
+!/adb-devices-name
 !/copy-kernel-modules-aosp
 !/dts-differ
 !/eat-but-from-wish

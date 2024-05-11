@@ -1,0 +1,19 @@
+#!/bin/bash
+
+set -e
+
+data=""
+
+for device in $(adb devices | grep -v List | awk '{print $1}'); do
+    status="$(adb -s "$device" get-state 2> /dev/null || echo unauthorized)"
+
+    name="unknown"
+    if [ "$status" != "unauthorized" ]; then
+        name="$(adb -s "$device" shell getprop ro.product.device 2> /dev/null || echo unknown)"
+    fi
+
+    data+="${device} ${status} ${name}"$'\n'
+done
+
+echo "List of devices attached"
+echo "$data" | column -t
