@@ -34,6 +34,9 @@ Using GNOME on EndeavourOS
 - Install python-pipx
 - Install slack-desktop
 - Install python-virtualenv
+- Remove gnome-text-editor
+- Install easyeffects
+- Install wireguard-tools
 
 ## pamac
 
@@ -48,7 +51,7 @@ Using GNOME on EndeavourOS
 ## GNOME extensions
 
 - appindicator-support (system)
-- arcmenu
+- arcmenu (system)
 - dash-to-panel (system)
 - gtk4-desktop-icons-ng (system)
 
@@ -57,7 +60,7 @@ Using GNOME on EndeavourOS
 - Fonts > Monospace Text > Cascadia Mono Regular 10
 - Windows > Titlebar buttons > Maximize and minimize
 - Set "Qogir-dark" as cursor theme
-- Set "ZorinBlue-Dark" as icons and older application theme
+- Set "ZorinBlue-Dark" as icons and older applications theme
 
 ## Dash to Panel
 
@@ -91,6 +94,7 @@ Using GNOME on EndeavourOS
 - GitKraken
 - Visual Studio Code
 - Android Studio
+- Android Studio for Platform
 
 ## desktop-icons
 
