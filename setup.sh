@@ -8,6 +8,8 @@
 # Setup all my stuff (scripts, configs, etc.)
 #
 
+PWD="$(pwd)"
+
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
 
 GIT_USER_NAME="Sebastiano Barezzi"
@@ -33,6 +35,11 @@ done
 for dir in $(ls -Ap "${SCRIPT_DIR}" | grep /); do
 	cp -R "${SCRIPT_DIR}/${dir}" ~/
 done
+
+# Fetch all submodules
+cd ~
+git submodule update --init --recursive
+cd "${PWD}"
 
 # Source .bashrc additions
 BASHRC_OVERLAY_STRING='source ~/.bashrc-overlay'
