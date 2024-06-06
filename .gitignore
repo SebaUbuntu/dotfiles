@@ -19,6 +19,7 @@
 
 # Allow files
 !/.bashrc-overlay
+!/.inputrc
 !/README.md
 !/setup.sh
 !/wallpaper.jpg
