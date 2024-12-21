@@ -1,0 +1,6 @@
+{
+    "device": "alsa_output.usb-Generic_USB_Audio-00.HiFi__Speaker__sink",
+    "device-description": "USB Audio Speakers",
+    "device-profile": "[Out] Speaker",
+    "preset-name": "Speakers"
+}
