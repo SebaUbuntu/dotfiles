@@ -12,6 +12,7 @@ REMOTE_PREFIX_GIT="git://github.com/LineageOS/"
 REMOTE_PREFIX_SSH="ssh://git@github.com/LineageOS/"
 
 ADDITIONAL_ARGS=()
+ACKNOWLEDGE_HEADS_PUSH="false"
 
 while [ "${#}" -gt 0 ]; do
     case "${1}" in
@@ -22,6 +23,9 @@ while [ "${#}" -gt 0 ]; do
         -c | --code-review)
             ADDITIONAL_ARGS+=("-o l=Code-Review${2}")
             shift
+            ;;
+        -f | --force)
+            ACKNOWLEDGE_HEADS_PUSH="true"
             ;;
         --merge_sha)
             MERGE_SHA="${2}"
@@ -102,6 +106,12 @@ if [ "${MERGE_SHA}" != "" ]; then
 
     ADDITIONAL_ARGS+=("-o base=${FIRST_SHA}")
     ADDITIONAL_ARGS+=("-o base=${SECOND_SHA}")
+fi
+
+if [[ ! "${BRANCH}" =~ "/for/" ]] && [ "${ACKNOWLEDGE_HEADS_PUSH}" != "true" ]; then
+    echo "Warning: Possibly bypassing Gerrit review process"
+    echo "To acknowledge, run the command again with --force"
+    exit 1
 fi
 
 git push "ssh://${USER}@${SERVER}:${PORT}/${PREFIX}/${REPO}" "${BRANCH}" ${ADDITIONAL_ARGS[@]}
