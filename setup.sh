@@ -8,6 +8,8 @@
 # Setup all my stuff (scripts, configs, etc.)
 #
 
+set -e
+
 PWD="$(pwd)"
 
 SCRIPT_DIR="$(cd -- "$(dirname -- "${BASH_SOURCE[0]}")" &> /dev/null && pwd)"
@@ -22,18 +24,17 @@ packageinstall() {
 	elif [ "$(command -v pacman)" != "" ]; then
 		sudo pacman -S --noconfirm $1
 	else
-		echo "No compatible package manager found, exiting"
-		exit
+		echo "No compatible package manager found, skipping"
 	fi
 }
 
 # Copy every file from the repo to the current home folder
 for file in $(ls -Ap "${SCRIPT_DIR}" | grep -v /); do
-	cp "${SCRIPT_DIR}/${file}" ~/
+	cp "${SCRIPT_DIR}/${file}" ~/ || echo "Failed to copy ${file}"
 done
 
 for dir in $(ls -Ap "${SCRIPT_DIR}" | grep /); do
-	cp -R "${SCRIPT_DIR}/${dir}" ~/
+	cp -R "${SCRIPT_DIR}/${dir}" ~/ || echo "Failed to copy ${dir}"
 done
 
 # Fetch all submodules
@@ -63,5 +64,7 @@ ln -s ~/.githooks/commit-msg ~/.git/hooks/commit-msg
 chmod u+x ~/.git/hooks/commit-msg
 
 # Add Nautilus "New document" templates
-mkdir -p "$(xdg-user-dir TEMPLATES)"
-touch "$(xdg-user-dir TEMPLATES)/Empty text file.txt"
+if hash xdg-user-dir 2>/dev/null; then
+	mkdir -p "$(xdg-user-dir TEMPLATES)"
+	touch "$(xdg-user-dir TEMPLATES)/Empty text file.txt"
+fi
