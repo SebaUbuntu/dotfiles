@@ -4,55 +4,73 @@ Using GNOME on EndeavourOS
 
 ## Packages
 
-- Install pamac
-- Install google-chrome
-- Install spotify and spotify-adblock
-- Install discord
-- Install telegram-desktop
-- Install visual-studio-code-bin
-- Install android-studio
-- Install android-studio-for-platform
-- Install element-desktop
-- Install gitkraken
-- Install lineageos-devel
-- Install gnome-firmware
-- Install gnome-browser-connector
-- Install gnome-terminal
-- Remove xterm and uxterm
-- Remove gnome-console
-- Install gnome-shell-extension-arc-menu
-- Install gnome-shell-extension-appindicator, libappindicator-gtk2 and libappindicator-gtk3
-- Install gnome-shell-extension-dash-to-panel
-- Install gnome-shell-extension-gtk4-desktop-icons-ng
-- Install gnome-shell-extension-freon
-- Install meld
-- Install shared-mime-info-gnome
-- Install openrgb and i2c-tools
-- Install android-tools
-- Install gnome-remote-desktop
-- Install htop
-- Install python-pipx
-- Install slack-desktop
-- Install python-virtualenv
-- Remove gnome-text-editor
-- Install easyeffects
-- Install wireguard-tools
+Install:
+
+- pamac
+- google-chrome
+- spotify
+  - spotify-adblock
+- discord
+- telegram-desktop
+- visual-studio-code-bin
+- android-studio
+- android-studio-for-platform
+- element-desktop
+- gitkraken
+- lineageos-devel
+- gnome-firmware
+- gnome-terminal
+- gnome-shell-extension-arc-menu
+- gnome-shell-extension-appindicator
+  - libappindicator-gtk2
+  - libappindicator-gtk3
+- gnome-shell-extension-dash-to-panel
+- gnome-shell-extension-gtk4-desktop-icons-ng
+- gnome-shell-extension-freon
+- meld
+- shared-mime-info-gnome
+- openrgb
+  - i2c-tools
+- android-tools
+- gnome-remote-desktop
+- htop
+- python-pipx
+- python-virtualenv
+- python-poetry
+- easyeffects
+  - carla
+  - calf
+  - lsp-plugins-lv2
+  - zam-plugins-lv2
+  - mda.lv2
+- wireguard-tools
+- gnome-connections
+- jdk-openjdk
+- libc++
+
+Remove:
+
+- xterm
+- uxterm
+- gnome-console
+- gnome-text-editor
 
 ## pamac
 
 - Enable AUR in settings
+- Enable "Remove unnecessary dependencies"
 
 ## GNOME Settings
 
 - Disable active angle
 - Set number of workspaces to 1
-- Set power profile to performance
 
 ## GNOME extensions
 
 - appindicator-support (system)
 - arcmenu (system)
 - dash-to-panel (system)
+- freon (system)
 - gtk4-desktop-icons-ng (system)
 
 ## GNOME tweaks
@@ -89,7 +107,6 @@ Using GNOME on EndeavourOS
 - Telegram
 - Discord
 - Element
-- Slack
 - Spotify
 - GitKraken
 - Visual Studio Code
