@@ -47,6 +47,7 @@ Install:
 - gnome-connections
 - jdk-openjdk
 - libc++
+- ccache
 
 Remove:
 
