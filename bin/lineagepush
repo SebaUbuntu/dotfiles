@@ -24,7 +24,7 @@ while [ "${#}" -gt 0 ]; do
             ADDITIONAL_ARGS+=("-o l=Code-Review${2}")
             shift
             ;;
-        -f | --force)
+        --ack-heads-push)
             ACKNOWLEDGE_HEADS_PUSH="true"
             ;;
         --merge_sha)
@@ -80,7 +80,7 @@ if [ "${#REPOS[@]}" -gt 1 ]; then
     done
     read -p "Enter the number: " -r
 
-    if ! [[ $REPLY =~ ^[0-9]+$ ]] || [ "${REPLY}" -lt 0 ] || [ "${REPLY}" -ge "${#REPOS[@]}" ]; then
+    if ! [[ "${REPLY}" =~ ^[0-9]+$ ]] || [ "${REPLY}" -lt 0 ] || [ "${REPLY}" -ge "${#REPOS[@]}" ]; then
         echo "Invalid input"
         exit 1
     fi
@@ -110,8 +110,13 @@ fi
 
 if [[ ! "${BRANCH}" =~ "/for/" ]] && [ "${ACKNOWLEDGE_HEADS_PUSH}" != "true" ]; then
     echo "Warning: Possibly bypassing Gerrit review process"
-    echo "To acknowledge, run the command again with --force"
-    exit 1
+    echo "To acknowledge without prompt, run the command again with --ack-heads-push"
+
+    read -p "Do you want to continue? (y/N): " -r
+    if [[ ! "${REPLY}" =~ ^[Yy]$ ]]; then
+        echo "Aborting"
+        exit 1
+    fi
 fi
 
 git push "ssh://${USER}@${SERVER}:${PORT}/${PREFIX}/${REPO}" "${BRANCH}" ${ADDITIONAL_ARGS[@]}
