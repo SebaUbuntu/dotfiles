@@ -15,5 +15,4 @@ for device in $(adb devices | grep -v List | awk '{print $1}'); do
     data+="${device} ${status} ${name}"$'\n'
 done
 
-echo "List of devices attached"
 echo "$data" | column -t
