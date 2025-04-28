@@ -28,7 +28,6 @@ Install:
 - gnome-shell-extension-gtk4-desktop-icons-ng
 - gnome-shell-extension-freon
 - meld
-- shared-mime-info-gnome
 - openrgb
   - i2c-tools
 - android-tools
