@@ -32,16 +32,16 @@ else
 	patch="$(git show ${1})"
 fi
 
-author_prefix='From: '
-author="$(echo "${patch}" | grep "${author_prefix}" | sed -e "s/^${author_prefix}//")"
+author_prefix='^From: '
+author="$(echo "${patch}" | grep "${author_prefix}" | sed -e "s/${author_prefix}//")"
 
 if [ -z "${author}" ]; then
-	author_prefix='Author: '
-	author="$(echo "${patch}" | grep "${author_prefix}" | sed -e "s/^${author_prefix}//")"
+	author_prefix='^Author: '
+	author="$(echo "${patch}" | grep "${author_prefix}" | sed -e "s/${author_prefix}//")"
 fi
 
-date_prefix='Date: '
-date="$(echo "${patch}" | grep "${date_prefix}" | sed -e "s/^${date_prefix}//")"
+date_prefix='^Date: '
+date="$(echo "${patch}" | grep "${date_prefix}" | sed -e "s/${date_prefix}//")"
 
 echo "Using author: ${author}"
 echo "Using date: ${date}"
