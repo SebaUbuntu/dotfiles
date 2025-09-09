@@ -47,6 +47,12 @@ Install:
 - jdk-openjdk
 - libc++
 - ccache
+- feishin-bin
+- ghidra
+  - ghidra-desktop
+- libva-utils
+- vdpauinfo
+- vulkan-tools
 
 Remove:
 
@@ -54,6 +60,15 @@ Remove:
 - uxterm
 - gnome-console
 - gnome-text-editor
+
+### NVIDIA
+
+Install:
+
+- nvidia
+- nvidia-utils
+- nvidia-settings
+- libva-vdpau-driver-wayland
 
 ## pamac
 
