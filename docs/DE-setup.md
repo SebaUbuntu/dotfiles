@@ -53,6 +53,10 @@ Install:
 - libva-utils
 - vdpauinfo
 - vulkan-tools
+- decibels
+- fluidsynth
+- qsynth
+- soundfont-fluid
 
 Remove:
 
@@ -68,7 +72,7 @@ Install:
 - nvidia
 - nvidia-utils
 - nvidia-settings
-- libva-vdpau-driver-wayland
+- libva-nvidia-driver
 
 ## pamac
 
