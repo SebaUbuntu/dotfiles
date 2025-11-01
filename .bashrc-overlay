@@ -19,13 +19,11 @@ export PATH="${PATH}:~/bin"
 export PATH="${PATH}:~/.local/bin"
 
 # Enable ccache on AOSP building if ccache is installed
-CCACHE_EXEC="/usr/bin/ccache"
+CCACHE_EXEC="$(command -v ccache 2>/dev/null || true)"
 if [ -f "${CCACHE_EXEC}" ]; then
-	# Also check if we have a valid ccache folder
-	for location in "/mnt/data/ccache" "~/ccache"; do
+	# Also check whether we have a valid ccache folder
+	for location in "/mnt/ccache" "/mnt/data/ccache" "~/ccache"; do
 		if [ -d "${location}" ]; then
-			export USE_CCACHE=1
-			export CCACHE_EXEC="${CCACHE_EXEC}"
 			export CCACHE_DIR="${location}"
 			break
 		fi
@@ -44,6 +42,14 @@ fi
 if [ -f "build/envsetup.sh" ]; then
 	# Disable roomservice
 	export ROOMSERVICE_DRYRUN=true
+
+	# Enable ccache if installed
+	if [ -f "${CCACHE_EXEC}" ] && [ -d "${CCACHE_DIR}" ]; then
+		export USE_CCACHE=1
+		export CCACHE_EXEC="${CCACHE_EXEC}"
+	else
+		echo "Warning: ccache not found or do ccache directory found, skipping ccache setup"
+	fi
 
 	echo "AOSP build/envsetup.sh found, sourcing..."
 	source build/envsetup.sh
