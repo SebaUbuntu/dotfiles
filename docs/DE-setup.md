@@ -22,8 +22,8 @@ Install:
 - gnome-terminal
 - gnome-shell-extension-arc-menu
 - gnome-shell-extension-appindicator
+  - libappindicator
   - libappindicator-gtk2
-  - libappindicator-gtk3
 - gnome-shell-extension-dash-to-panel
 - gnome-shell-extension-gtk4-desktop-icons-ng
 - gnome-shell-extension-freon
@@ -57,6 +57,8 @@ Install:
 - fluidsynth
 - qsynth
 - soundfont-fluid
+- ruby-bundler
+- fastlane
 
 Remove:
 
