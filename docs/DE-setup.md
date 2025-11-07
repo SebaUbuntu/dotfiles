@@ -67,6 +67,12 @@ Remove:
 - gnome-console
 - gnome-text-editor
 
+### Intel
+
+- intel-media-driver
+- libvdpau-va-gl (+ `VDPAU_DRIVER=va_gl` in `/etc/environment`)
+- vulkan-intel
+
 ### NVIDIA
 
 Install:
