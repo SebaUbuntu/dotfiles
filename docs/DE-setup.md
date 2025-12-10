@@ -20,13 +20,14 @@ Install:
 - lineageos-devel
 - gnome-firmware
 - gnome-terminal
-- gnome-shell-extension-arc-menu
 - gnome-shell-extension-appindicator
   - libappindicator
   - libappindicator-gtk2
+- gnome-shell-extension-arc-menu
+- gnome-shell-extension-astra-monitor
+  - amdgpu_top
 - gnome-shell-extension-dash-to-panel
 - gnome-shell-extension-gtk4-desktop-icons-ng
-- gnome-shell-extension-freon
 - meld
 - openrgb
   - i2c-tools
