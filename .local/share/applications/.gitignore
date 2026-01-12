@@ -5,5 +5,5 @@
 !/.gitignore
 
 # Allow files
-!/spotify-adblock.desktop
-!/spotify.desktop
+!/spotify-adblock.desktop.bak
+!/spotify.desktop.bak
