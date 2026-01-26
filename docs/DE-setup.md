@@ -89,6 +89,11 @@ Install:
 - nvidia-settings
 - libva-nvidia-driver
 
+### CLEVO NP50DB
+
+- clevo-drivers-dkms-git
+- tuxedo-control-center-bin
+
 ## pamac
 
 - Enable AUR in settings
