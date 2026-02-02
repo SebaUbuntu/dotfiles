@@ -61,11 +61,8 @@ Install:
 - ruby-bundler
 - fastlane
 - pandoc
-- texlive-bin
-- texlive-fontsrecommended
-- texlive-latex
-- texlive-latexextra
-- texlive-plaingeneric
+- texlive
+- texlive-lang
 
 Remove:
 
