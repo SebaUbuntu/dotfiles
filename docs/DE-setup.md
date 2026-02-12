@@ -63,6 +63,7 @@ Install:
 - pandoc
 - texlive
 - texlive-lang
+- biber
 
 Remove:
 
