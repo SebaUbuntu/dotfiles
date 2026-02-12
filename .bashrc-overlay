@@ -48,7 +48,7 @@ if [ -f "build/envsetup.sh" ]; then
 		export USE_CCACHE=1
 		export CCACHE_EXEC="${CCACHE_EXEC}"
 	else
-		echo "Warning: ccache not found or do ccache directory found, skipping ccache setup"
+		echo "Warning: ccache not found or no ccache directory found, skipping ccache setup"
 	fi
 
 	echo "AOSP build/envsetup.sh found, sourcing..."
