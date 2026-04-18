@@ -18,6 +18,9 @@ export PATH="${PATH}:~/bin"
 # Add ~/.local/bin to PATH, so scripts inside it can be executed
 export PATH="${PATH}:~/.local/bin"
 
+# Add cargo binaries to PATH
+export PATH="${PATH}:~/.cargo/bin"
+
 # Enable ccache on AOSP building if ccache is installed
 CCACHE_EXEC="$(command -v ccache 2>/dev/null || true)"
 if [ -f "${CCACHE_EXEC}" ]; then

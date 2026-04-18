@@ -4,22 +4,9 @@ Using GNOME on EndeavourOS
 
 ## Packages
 
-Install:
+### System
 
-- pamac
-- google-chrome
-- spotify
-  - spotify-adblock
-- discord
-- telegram-desktop
-- visual-studio-code-bin
-- android-studio
-- android-studio-for-platform
-- element-desktop
-- gitkraken
-- lineageos-devel
 - gnome-firmware
-- gnome-terminal
 - gnome-shell-extension-appindicator
   - libappindicator
   - libappindicator-gtk2
@@ -28,49 +15,71 @@ Install:
   - amdgpu_top
 - gnome-shell-extension-dash-to-panel
 - gnome-shell-extension-gtk4-desktop-icons-ng
-- meld
+- htop
+- libva-utils
 - openrgb
   - i2c-tools
+- vdpauinfo
+- vulkan-tools
+
+Remove:
+
+- uxterm
+- xterm
+
+### Core
+
+Install:
+
 - android-tools
-- gnome-remote-desktop
-- htop
-- python-pipx
-- python-virtualenv
-- python-poetry
+- decibels
+- discord
 - easyeffects
   - carla
   - calf
   - lsp-plugins-lv2
   - zam-plugins-lv2
   - mda.lv2
-- wireguard-tools
-- gnome-connections
-- jdk-openjdk
-- libc++
-- ccache
+- element-desktop
 - feishin-bin
-- ghidra
-  - ghidra-desktop
-- libva-utils
-- vdpauinfo
-- vulkan-tools
-- decibels
-- fluidsynth
 - qsynth
-- soundfont-fluid
-- ruby-bundler
-- fastlane
+  - fluidsynth
+  - soundfont-fluid
+- gnome-connections
+- gnome-remote-desktop
+- google-chrome
+- jdk-openjdk
+- meld
+- python-pipx
+- spotify
+  - spotify-adblock
+- telegram-desktop
+- visual-studio-code-bin
+
+### $\LaTeX$
+
+- biber
 - pandoc
 - texlive
 - texlive-lang
-- biber
 
-Remove:
+### Development
 
-- xterm
-- uxterm
-- gnome-console
-- gnome-text-editor
+Install:
+
+- android-studio
+- android-studio-for-platform
+- ccache
+- fastlane
+- ghidra
+  - ghidra-desktop
+- gitkraken
+- intellij-idea-ultimate-edition
+- libc++
+- lineageos-devel
+- python-poetry
+- python-virtualenv
+- ruby-bundler
 
 ### Intel
 
@@ -92,17 +101,14 @@ Install:
 - clevo-drivers-dkms-git
 - tuxedo-control-center-bin
 
-## pamac
+## Configuration
 
-- Enable AUR in settings
-- Enable "Remove unnecessary dependencies"
-
-## GNOME Settings
+### GNOME Settings
 
 - Disable active angle
 - Set number of workspaces to 1
 
-## GNOME extensions
+### GNOME extensions
 
 - appindicator-support (system)
 - arcmenu (system)
@@ -110,14 +116,15 @@ Install:
 - freon (system)
 - gtk4-desktop-icons-ng (system)
 
-## GNOME tweaks
+### GNOME tweaks
 
 - Fonts > Monospace Text > Cascadia Mono Regular 10
+- Mouse & Touchpad > Enable "Paste on middle click"
 - Windows > Titlebar buttons > Maximize and minimize
 - Set "Qogir-dark" as cursor theme
 - Set "ZorinBlue-Dark" as icons and older applications theme
 
-## Dash to Panel
+### Dash to Panel
 
 - Disable "Display panels on all monitors"
 - Hide "Show applications button"
@@ -127,16 +134,16 @@ Install:
 - Style > Enable "Override panel theme background opacity"
 - Style > Enable "Dynamic background opacity"
 
-## Nautilus
+### Nautilus
 
 - Order folders first
 - Enable "Create shortcut" and "Permanently delete" actions on right click menu
 
-## GNOME Terminal
+### GNOME Terminal
 
 - Set theme variant to "Light"
 
-## Dash icons
+### Dash icons
 
 - Google Chrome
 - Files
@@ -150,6 +157,13 @@ Install:
 - Android Studio
 - Android Studio for Platform
 
-## desktop-icons
+### desktop-icons
 
 - Set icons size to "Small"
+
+### GNOME text editor
+
+- Indentation characters: Spaces
+- Tabulation spaces: 4
+- Indentation spaces: 4
+- Disable "Restore session"
