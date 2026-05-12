@@ -80,6 +80,7 @@ Install:
 - python-poetry
 - python-virtualenv
 - ruby-bundler
+- webstorm
 
 ### Intel
 
