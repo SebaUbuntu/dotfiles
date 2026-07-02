@@ -41,7 +41,7 @@ Install:
   - zam-plugins-lv2
   - mda.lv2
 - element-desktop
-- feishin-bin
+- feishin
 - qsynth
   - fluidsynth
   - soundfont-fluid
@@ -72,7 +72,6 @@ Install:
 - ccache
 - fastlane
 - ghidra
-  - ghidra-desktop
 - gitkraken
 - intellij-idea-ultimate-edition
 - libc++
@@ -80,7 +79,10 @@ Install:
 - python-poetry
 - python-virtualenv
 - ruby-bundler
+- rustrover
+  - rustrover-jre
 - webstorm
+  - webstorm-jre
 
 ### Intel
 
